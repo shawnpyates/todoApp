@@ -9,7 +9,6 @@ function generateQueryUrl(searchID, item) {
   return `https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`;
 }
 
-
 const getMessage = (searchType, item, cb) => {
   if (searchType === apiTypes.zomato.id) {
     item += " vancouver";
