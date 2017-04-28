@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
             <!--Bootstrap CSS-->
     <link rel="stylesheet" href="/vendor/bootstrap.min.css" type="text/css"/>
-
+        <!--Jquery UI CSS-->
+    <link rel="stylesheet" href="/vendor/jquery-ui.min.css" type="text/css"/>
 
     <!--Layout CSS-->
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
@@ -22,6 +23,10 @@
 
     <!--JQuery JS-->
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+
+    <!--JQuery UI JS-->
+    <script type="text/javascript" src="/vendor/jquery-ui.min.js"></script>
+
             <!--Bootstrap JS-->
     <script type="text/javascript" src="/vendor/bootstrap.min.js"></script>
     <!--App JS-->
@@ -54,7 +59,7 @@
     <div class="input-group">
       <input type="text" class="form-control" placeholder="What do you want to do?">
       <span class="input-group-btn">
-        <button class="btn btn-default add" type="button" onclick="ClearFields();">Add to list</button>
+        <button class="btn btn-default add" type="button">Add to list</button>
       </span>
     </div><!-- /input-group -->
   </div><!-- /.col-lg-6 -->
@@ -63,41 +68,45 @@
 <div class="row"><div class="col-lg-12"></div></div>
 <div class="row">
   <div class="col-lg-3">
-    <div class="list-group movies"><div class="list-heading">Movies</div>
-      <button type="button" class="list-group-item" draggable="true">Cras justo odio</button>
-      <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-      <button type="button" class="list-group-item">Morbi leo risus</button>
-      <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-      <button type="button" class="list-group-item">Vestibulum at eros</button>
-    </div>
+  <div class="list-heading">Movies</div>
+    <ul id="list-group1" class="sorted movies">
+      <li class="list-group-item"> Cras justo odio</li>
+      <li class="list-group-item">Dapibus ac facilisis in</li>
+      <li class="list-group-item">Morbi leo risus</li>
+      <li class="list-group-item">Porta ac consectetur ac</li>
+      <li class="list-group-item">Vestibulum at eros</li>
+    </ul>
   </div>
   <div class="col-lg-3">
-    <div class="list-group products">
-      <div class="list-heading">Products</div>
-        <button type="button" class="list-group-item">Cras justo odio</button>
-        <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-        <button type="button" class="list-group-item">Morbi leo risus</button>
-        <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-        <button type="button" class="list-group-item">Vestibulum at eros</button>
-    </div>
+  <div class="list-heading">Products</div>
+    <ul id="list-group2" class="sorted products">
+
+        <li class="list-group-item">Cras justo odio</li>
+        <li class="list-group-item">Dapibus ac facilisis in</li>
+        <li class="list-group-item">Morbi leo risus</li>
+        <li class="list-group-item">Porta ac consectetur ac</li>
+        <li class="list-group-item">Vestibulum at eros</li>
+    </ul>
   </div>
     <div class="col-lg-3">
-    <div class="list-group books"><div class="list-heading">Books</div>
-      <button type="button" class="list-group-item">Cras justo odio</button>
-      <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-      <button type="button" class="list-group-item">Morbi leo risus</button>
-      <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-      <button type="button" class="list-group-item">Vestibulum at eros</button>
-    </div>
+      <div class="list-heading">Books</div>
+        <ul id="list-group3" class="sorted books">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
   </div>
-    <div class="col-lg-3 restaurants">
-    <div class="list-group"><div class="list-heading">Restaurants</div>
-      <button type="button" class="list-group-item">Cras justo odio</button>
-      <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
-      <button type="button" class="list-group-item">Morbi leo risus</button>
-      <button type="button" class="list-group-item">Porta ac consectetur ac</button>
-      <button type="button" class="list-group-item">Vestibulum at eros</button>
-    </div>
+    <div class="col-lg-3">
+    <div class="list-heading">Restaurants</div>
+        <ul id="list-group4" class="sorted restaurants">
+          <li class="list-group-item">Cras justo odio</li>
+          <li class="list-group-item">Dapibus ac facilisis in</li>
+          <li class="list-group-item">Morbi leo risus</li>
+          <li class="list-group-item">Porta ac consectetur ac</li>
+          <li class="list-group-item">Vestibulum at eros</li>
+      </ul>
   </div>
 </div>
   </body>

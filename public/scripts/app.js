@@ -7,10 +7,15 @@ $(() => {
   //     $("<div>").text(user.name).appendTo($("body"));
   //   }
   // });;
-$('.listgroup').sortable({
-    connectWith: '.listgroup',
-    placeholder: 'placeholder',
-  });
+
+$(".list-group-item").on("click", function(event){
+  console.log("Item clicked", $(this));
+  console.log("Output is",$(this)[0].innerText);
+})
+$( "#list-group1, #list-group2, #list-group3, #list-group4" ).sortable({
+      connectWith: ".sorted"
+    }).disableSelection();
+
 $(".add").on("click", function(event) {
 //  console.log("field", $(".form-control"));
   const userInput = $(".form-control")[0].value;
@@ -21,7 +26,7 @@ renderTask(userInput);
 });
 
 function createElement(input){
-  const $taskButton = `<button type="button" class="list-group-item">${input}</button>`
+  const $taskButton = `<li class="list-group-item">${input}</button>`
   return $taskButton;
 }
 
