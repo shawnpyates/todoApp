@@ -31,5 +31,4 @@ function renderTask(input){
 }
 
 
->>>>>>> front-end-initial
 });
