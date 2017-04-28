@@ -9,6 +9,7 @@ const methodOverride = require('method-override');
 const bodyParser  = require("body-parser");
 const sass        = require("node-sass-middleware");
 const app         = express();
+const cookieSession = require('cookie-session')
 
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
@@ -28,6 +29,11 @@ app.use(morgan('dev'));
 // Log knex SQL queries to STDOUT as well
 app.use(knexLogger(knex));
 
+// use cookie-session
+app.use(cookieSession({
+  name: 'session',
+  keys: ["agdhsg3476"]
+}));
 // use method override using query value
 app.use(methodOverride('_method'));
 
@@ -45,9 +51,12 @@ app.use(express.static("public"));
 app.use("/api/users", usersRoutes(knex));
 app.use("/tasks", tasksRoutes(knex));
 
-// Home page
 app.get("/", (req, res) => {
   res.render("index");
+});
+
+app.get("/login", (req, res) => {
+  res.render("login");
 });
 app.post("/", (req, res) => {
   res.status(201).send();
@@ -58,6 +67,33 @@ app.put("/", (req, res) => {
 app.delete("/", (req, res) => {
   res.status(201).send();
 });
+
+// ////////////
+
+app.get('/logout', (req, res) => {
+  req.session = undefined;
+  res.redirect('/');
+});
+
+app.post('/login', (req, res) => {
+        // const findUserByEmail = knex('users')
+        //   .select('email')
+        //   .where({email: req.body.email})
+        //   .limit(1);
+        // findUserByEmail.then((rows) => {
+        //   const user = rows[0];
+        //   if (!user) {
+        //     req.session.user_id = user.id;
+        //      res.redirect('/');
+        //   }
+        // }).catch((err) => {
+        //   req.flash('errors', err.message);
+          res.redirect('/');
+        // });
+    
+});
+
+
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
