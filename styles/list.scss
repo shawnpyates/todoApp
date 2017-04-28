@@ -1,0 +1,14 @@
+.list-heading {
+  padding: 20px;
+  color: #53b5bc;
+  font-size:1.2em;
+  margin-left: 35px
+}
+#list-group1, #list-group2, #list-group3, #list-group4 {
+  min-height: 40px;
+
+  .list-group-item {
+    margin: 10px;
+    width:302.25px;
+  }
+}
