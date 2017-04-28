@@ -9,6 +9,8 @@ function generateQueryUrl(searchID, item) {
   return `https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`;
 }
 
+
+// connect to API and parse JSON so that it can be queried
 const getMessage = (searchType, item, cb) => {
   if (searchType === apiTypes.zomato.id) {
     item += " vancouver";
@@ -31,7 +33,8 @@ const getMessage = (searchType, item, cb) => {
   });
 }
 
-
+// search results will usually be predictably formatted based on the site being searched
+// split the result and compare specified section to the user's input
 function getSplitMessage(type, cb) {
   if (!searchItem) {
     console.error("No input.");
@@ -47,7 +50,9 @@ function getSplitMessage(type, cb) {
   });
 }
 
-
+// since most movies are sold by Walmart, we will wait for queries to go through
+// IMDB first, and if a match is found, Walmart will not be searched
+// this way, when a movie title is searched, it will go into the "movies to watch" category
 getSplitMessage(apiTypes.imdb, function(splitMessages){
   if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
     apiTypes.imdb.found = true;
