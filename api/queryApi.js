@@ -1,7 +1,7 @@
 const arg = process.argv.slice(2);
 const searchItem = arg.join(" ");
 const https = require('https');
-const apiTypes = require('./apiTypes')
+const apiTypes = require('./apiTypes');
 
 
 
