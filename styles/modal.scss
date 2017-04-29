@@ -1,6 +1,28 @@
 #myModal {
-/*  background-color: #cbeff2;*/
+
 background-color: #b7e4e8;
+  .btn-primary {
+    background-color: #53b5bc;
+  }
+}
+
+#myModal {
+  background-color: #b7e4e8;
+
+  .modal-header {
+
+  }
+  .modal-body {
+    .body-text {
+      .glyphicon.glyphicon-pencil {
+        float: right;
+        opacity: 0.6;
+      }
+    }
+  .edit-input {
+    display:none;
+}
+  }
   .btn-primary {
     background-color: #53b5bc;
   }
