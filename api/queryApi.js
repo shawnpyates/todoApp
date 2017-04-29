@@ -6,7 +6,7 @@ const apiTypes = require("./apiTypes");
 
 
 function generateQueryUrl(searchID, item) {
-  // console.log(`https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`);
+  console.log(`https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`);
   return `https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`;
 }
 
@@ -25,8 +25,11 @@ const getMessage = (searchType, item, cb) => {
       });
       response.on('end', () => {
         const page  = JSON.parse(body);
-        const title = page.items[0].title;
-        cb(title);
+        if (page.items) {
+          const title = page.items[0].title;
+          cb(title);
+        };
+
       });
     } else {
       console.error("Sorry, but there was a connection problem.");
@@ -76,7 +79,7 @@ function findInApi(searchItem) {
     }
   });
   getSplitMessage(searchItem, apiTypes.walmart, function(splitMessages){
-    if (splitMessages[0].toLowerCase().includes(searchItem.toLowerCase()) &&
+    if (apiTypes.walmart.message.toLowerCase().includes(searchItem.toLowerCase()) &&
         splitMessages[0] !== "Walmart") {
       apiTypes.walmart.found = true;
     } else {
@@ -94,38 +97,38 @@ function setValues(searchItem) {
 }
 
 // assign a category to each take so we can result how to display the result to the user
-function finish(results) {
-  let imdb = results[0];
-  let gBooks = results[1];
-  let zomato = results[2];
-  let walmart = results[3];
-  if (imdb && !gBooks && !zomato) {
-    console.log(1);
-    return 1;
-  } else if (!imdb && gBooks && !zomato) {
-    console.log(2);
-    return 2;
-  } else if (!imdb && !gBooks && zomato) {
-    console.log(3);
-    return 3;
-  } else if (!imdb && !gBooks && !zomato) {
-    if (walmart) {
-      console.log(4);
-      return 4;
-    }
-  } else if (imdb && gBooks && !zomato) {
-    console.log(5);
-    return 5;
-  } else {
-    console.log(6);
-    return 6;
-  }
-}
+// function finish(results) {
+//   let imdb = results[0];
+//   let gBooks = results[1];
+//   let zomato = results[2];
+//   let walmart = results[3];
+//   if (imdb && !gBooks && !zomato) {
+//     console.log(1);
+//     return 1;
+//   } else if (!imdb && gBooks && !zomato) {
+//     console.log(2);
+//     return 2;
+//   } else if (!imdb && !gBooks && zomato) {
+//     console.log(3);
+//     return 3;
+//   } else if (!imdb && !gBooks && !zomato) {
+//     if (walmart) {
+//       console.log(4);
+//       return 4;
+//     }
+//   } else if (imdb && gBooks && !zomato) {
+//     console.log(5);
+//     return 5;
+//   } else {
+//     console.log(6);
+//     return 6;
+//   }
+// }
 
 
-module.exports = setValues(userSearch).then(finish);
+module.exports = setValues;
 
-
+// setValues("Jaws").then(finish);
 
 
 
