@@ -1,4 +1,4 @@
-$((){
+$(() => {
   $(".navbar-btn").on("click", function(event){
     $.ajax({
       url: "/logout",
