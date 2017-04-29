@@ -21,6 +21,9 @@ $(() => {
       method: "GET",
       success: function(data) {
         $(".movies").empty();
+        $(".books").empty();
+        $(".products").empty();
+        $(".restaurants").empty();
         renderTask(data);
       }
     });

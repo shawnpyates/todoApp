@@ -25,9 +25,11 @@ const getMessage = (searchType, item, cb) => {
       });
       response.on('end', () => {
         const page  = JSON.parse(body);
+        if (page.items) {
         const title = page.items[0].title;
         console.log("HERE'S THE TITLE:  ", title);
         cb(title);
+        }
       });
     } else {
       console.error("Sorry, but there was a connection problem.");
