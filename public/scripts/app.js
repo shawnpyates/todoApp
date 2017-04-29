@@ -1,15 +1,6 @@
 $(() => {
 
-$(".list-group-item").on("click", function(event){
-  console.log("Item clicked", $(this));
-  console.log("Output is",$(this)[0].innerText);
-  $("#myModal").modal('show');
-  $(".body-text")[0].innerText = $(this)[0].innerText;
-  console.log("ITEM is", $(".body-text"));
-})
-$( "#list-group1, #list-group2, #list-group3, #list-group4" ).sortable({
-      connectWith: ".sorted"
-    }).disableSelection();
+
 
 $(".add").on("click", function(event) {
 //  console.log("field", $(".form-control"));
@@ -41,19 +32,46 @@ function loadTasks(){
 
 function renderTask(input){
   const $task = input.map(createElement).reverse();
-  console.log("Task element", $task)
   $(".movies").append($task);
 }
 
 function createElement(task){
-  console.log("Task obj", task);
   const taskName = task.name;
-  console.log("Task name", taskName);
-  const $taskButton = `<li class="list-group-item"><input type="checkbox">${taskName}</button>`
-  return $taskButton;
+  // console.log("Task name", taskName);
+  const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${taskName}</li>`;
+
+  //$(".list-group-item").data('id',task.id);
+  //console.log("taskListitem", ;
+    //.data('id',task.id))
+  return $taskListitem;
 }
 
+$("body").on("click",".done", function(event){
+  // console.log("Checkbox done");
+  event.stopImmediatePropagation();
+  $(this).parent().toggleClass("strikeOut");
+  // console.log("Element is", $(this).closest());
+});
 
+$("body").on("click", ".glyphicon.glyphicon-trash", function(event){
+  event.stopImmediatePropagation();
+  console.log("Deleted list item id", $(this).parent());
+  $.ajax({
+     // console.log("Deleted list item id", $(this).parent().data('id'));
+        url: "/tasks/"+$(this).parent().data('task-id')+"?_method=DELETE",
+        type: "DELETE",
+        success: () => {
+          console.log("success DELETE");
+          console.log("Deleted list item is", $(this).parent());
+            $(this).parent().remove();
+        }
+      });
+})
+
+
+
+
+loadTasks();
 
 
 });

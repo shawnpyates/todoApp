@@ -13,6 +13,7 @@ module.exports = (knex) => {
         res.json(results);
     });
   });
+
   router.post("/", (req, res) => {
     console.log("post is hit");
     console.log("Input recieved is", req.body.name);
@@ -26,8 +27,10 @@ module.exports = (knex) => {
     knex
   });
 
-  router.delete("/", (req, res) => {
-    knex
+  router.delete("/:id", (req, res) => {
+    console.log("ID is ", req.params.id);
+    knex('dummydata').where('id',req.params.id).del()
+      .then(() => {res.status(200).json({ok: true}); });
   });
 
   return router;
