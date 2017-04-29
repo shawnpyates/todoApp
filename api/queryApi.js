@@ -25,11 +25,9 @@ const getMessage = (searchType, item, cb) => {
       });
       response.on('end', () => {
         const page  = JSON.parse(body);
-        if (page.items) {
-          const title = page.items[0].title;
-          cb(title);
-        };
-
+        const title = page.items[0].title;
+        console.log("HERE'S THE TITLE:  ", title);
+        cb(title);
       });
     } else {
       console.error("Sorry, but there was a connection problem.");
@@ -46,17 +44,22 @@ function getSplitMessage(searchItem, type, cb) {
   }
   getMessage(type.id, searchItem, function(searchTitle) {
     type.message = searchTitle;
+    // console.log("-----SEARCH TITLE INSIDE SPLITM-----", searchTitle);
+    let splitSearchArray = []
     for (let i = 0; i < type.splitters.length; i++) {
       splitSearchTitle = searchTitle.split(type.splitters[i]);
-      type.splitMessages.push(splitSearchTitle[0]);
+      splitSearchArray.push(splitSearchTitle[0]);
     }
-    cb(type.splitMessages);
+    console.log(`---SPLITSEARCH ARRAY INSIDE SPLITM---- for ${type}...`, splitSearchArray);
+    cb(splitSearchArray);
   });
 }
 
 // find if search item has matches in API for each search type
 function findInApi(searchItem) {
+  console.log("SEARCH ITEM FROM FINDINAPI: ", searchItem);
   getSplitMessage(searchItem, apiTypes.imdb, function(splitMessages){
+    console.log("IMDB SPLIT STRING: ", splitMessages[0].toLowerCase());
     if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
       apiTypes.imdb.found = true;
     } else {
@@ -64,6 +67,7 @@ function findInApi(searchItem) {
     }
   });
   getSplitMessage(searchItem, apiTypes.gBooks, function(splitMessages){
+    console.log("GBOOKS SPLIT STRING: ", splitMessages[0].toLowerCase())
     if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
       apiTypes.gBooks.found = true;
     } else {
@@ -71,6 +75,7 @@ function findInApi(searchItem) {
     }
   });
   getSplitMessage(searchItem, apiTypes.zomato, function(splitMessages){
+    console.log("ZOMATO SPLIT STRINGS: ", splitMessages[0].toLowerCase(), splitMessages[1].toLowerCase());
     if (splitMessages[0].toLowerCase() === `${searchItem}`.toLowerCase() ||
         splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase()) {
       apiTypes.zomato.found = true;
@@ -79,9 +84,11 @@ function findInApi(searchItem) {
     }
   });
   getSplitMessage(searchItem, apiTypes.walmart, function(splitMessages){
+    console.log ("WALMART SPLIT STRING: ", splitMessages[0].toLowerCase());
     if (apiTypes.walmart.message.toLowerCase().includes(searchItem.toLowerCase()) &&
         splitMessages[0] !== "Walmart") {
       apiTypes.walmart.found = true;
+      console.log("------------TRUE FOR WALMART------------");
     } else {
       apiTypes.walmart.found = false;
     }
@@ -92,7 +99,7 @@ function findInApi(searchItem) {
 function setValues(searchItem) {
   return new Promise((resolve, reject) => {
     findInApi(searchItem);
-    setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 1500);
+    setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 2000);
   });
 }
 

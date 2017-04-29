@@ -2,29 +2,31 @@
 const searchCategory = require("../api/queryApi");
 
 function finish(results) {
+
+  console.log("RESULTS FROM FINISH:  ", results);
   let imdb = results[0];
   let gBooks = results[1];
   let zomato = results[2];
   let walmart = results[3];
   if (imdb && !gBooks && !zomato) {
-    console.log(1);
+    console.log("CATEGORY 1 MATCH");
     return 1;
   } else if (!imdb && gBooks && !zomato) {
-    console.log(2);
+    console.log("CATEGORY 2 MATCH");
     return 2;
   } else if (!imdb && !gBooks && zomato) {
-    console.log(3);
+    console.log("CATEGORY 3 MATCH");
     return 3;
   } else if (!imdb && !gBooks && !zomato) {
     if (walmart) {
-      console.log(4);
+      console.log("CATEGORY 4 MATCH");
       return 4;
     }
   } else if (imdb && gBooks && !zomato) {
-    console.log(5);
+    console.log("CATEGORY 5 MATCH");;
     return 5;
   } else {
-    console.log(6);
+    console.log("CATEGORY 6 MATCH");
     return 6;
   }
 }
@@ -50,6 +52,9 @@ module.exports = (knex) => {
 
   router.post("/", (req, res) => {
     function insertData(result) {
+      if (!result) {
+        result = 6;
+      }
       knex('tasks').insert({ task_name: req.body.name, categories_id: result })
       .then(() =>  { res.status(201).send(); })
      }
