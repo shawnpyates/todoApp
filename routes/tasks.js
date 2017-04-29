@@ -1,4 +1,6 @@
 "use strict";
+const searchCategory = require("../queryApi");
+
 const express = require('express');
 const router  = express.Router();
 
@@ -17,10 +19,8 @@ module.exports = (knex) => {
   router.post("/", (req, res) => {
     console.log("post is hit");
     console.log("Input recieved is", req.body.name);
-   knex('dummydata').insert({ name: req.body.name ,categories_id:1})
+   knex('dummydata').insert({ name: req.body.name, categories_id: searchCategory(req.body.name)})
    .then(() =>  { res.status(201).send(); });
-
-
   });
 
   router.put("/", (req, res) => {

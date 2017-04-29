@@ -1,5 +1,5 @@
-const arg = process.argv.slice(2);
-const searchItem = arg.join(" ");
+// const arg = process.argv.slice(2);
+// const searchItem = arg.join(" ");
 const https = require("https");
 const apiTypes = require("./apiTypes");
 
@@ -36,7 +36,7 @@ const getMessage = (searchType, item, cb) => {
 
 // search results will usually be predictably formatted based on the site being searched
 // split the result and compare specified section to the user's input
-function getSplitMessage(type, cb) {
+function getSplitMessage(searchItem, type, cb) {
   if (!searchItem) {
     console.error("No input.");
     return;
@@ -52,22 +52,22 @@ function getSplitMessage(type, cb) {
 }
 
 // find if search item has matches in API for each search type
-function findInApi() {
-  getSplitMessage(apiTypes.imdb, function(splitMessages){
+function findInApi(searchItem) {
+  getSplitMessage(searchItem, apiTypes.imdb, function(splitMessages){
     if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
       apiTypes.imdb.found = true;
     } else {
       apiTypes.imdb.found = false;
     }
   });
-  getSplitMessage(apiTypes.gBooks, function(splitMessages){
+  getSplitMessage(searchItem, apiTypes.gBooks, function(splitMessages){
     if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
       apiTypes.gBooks.found = true;
     } else {
       apiTypes.gBooks.found = false;
     }
   });
-  getSplitMessage(apiTypes.zomato, function(splitMessages){
+  getSplitMessage(searchItem, apiTypes.zomato, function(splitMessages){
     if (splitMessages[0].toLowerCase() === `${searchItem}`.toLowerCase() ||
         splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase()) {
       apiTypes.zomato.found = true;
@@ -75,7 +75,7 @@ function findInApi() {
       apiTypes.zomato.found = false;
     }
   });
-  getSplitMessage(apiTypes.walmart, function(splitMessages){
+  getSplitMessage(searchItem, apiTypes.walmart, function(splitMessages){
     if (splitMessages[0].toLowerCase().includes(searchItem.toLowerCase()) &&
         splitMessages[0] !== "Walmart") {
       apiTypes.walmart.found = true;
@@ -86,9 +86,9 @@ function findInApi() {
 }
 
 // allow time for each search and collect values before displaying result to user
-function setValues() {
+function setValues(searchItem) {
   return new Promise((resolve, reject) => {
-    findInApi();
+    findInApi(searchItem);
     setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 1000);
   });
 }
@@ -123,7 +123,7 @@ function finish(results) {
 }
 
 
-setValues().then(finish);
+module.exports = setValues(userSearch).then(finish);
 
 
 
