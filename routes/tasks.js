@@ -14,7 +14,7 @@ function finish(results) {
   } else if (!imdb && gBooks && !zomato) {
     console.log("CATEGORY 2 MATCH");
     return 2;
-  } else if (!imdb && !gBooks && zomato) {
+  } else if (zomato) {
     console.log("CATEGORY 3 MATCH");
     return 3;
   } else if (!imdb && !gBooks && !zomato) {
