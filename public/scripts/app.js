@@ -1,25 +1,22 @@
 $(() => {
-
-
-
-$(".add").on("click", function(event) {
-//  console.log("field", $(".form-control"));
-  const userInput = $(".form-control")[0].value;
-  console.log(userInput);
-  $.ajax({
-        url: "/tasks",
-        method: "POST",
-        data: {"name": userInput},
-        success: function() {
-          console.log("success POST");
-          $(".form-control")[0].value = "";
-          loadTasks();
-        }
-      });
+  //Invoked when the user adds task and add button is clicked
+  $(".add").on("click", function(event) {
+    const userInput = $(".form-control")[0].value;
+    console.log(userInput);
+    $.ajax({
+          url: "/tasks",
+          method: "POST",
+          data: {"name": userInput},
+          success: function() {
+            console.log("success POST");
+            $(".form-control")[0].value = "";
+            loadTasks();
+          }
+    });
   });
-
-function loadTasks(){
-      $.ajax({
+  //Makes a GET request to get the json object of the data and passes the data to renderTask
+  function loadTasks(){
+    $.ajax({
       url: "/tasks",
       method: "GET",
       success: function(data) {
@@ -27,51 +24,20 @@ function loadTasks(){
         renderTask(data);
       }
     });
-}
-// console.log("Input", $userInput);
+  }
 
-function renderTask(input){
-  const $task = input.map(createElement).reverse();
-  $(".movies").append($task);
-}
+  //Once it gets the data, passes each task data to the createElement and on recieve the element appends it to the corresponding list group
+  function renderTask(input){
+    const $task = input.map(createElement).reverse();
+    $(".movies").append($task);
+  }
 
-function createElement(task){
-  const taskName = task.name;
-  // console.log("Task name", taskName);
-  const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${taskName}</li>`;
+  //Creates a new task list item
+  function createElement(task){
+    const taskName = task.name;
+    const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${taskName}</li>`;
+    return $taskListitem;
+  }
 
-  //$(".list-group-item").data('id',task.id);
-  //console.log("taskListitem", ;
-    //.data('id',task.id))
-  return $taskListitem;
-}
-
-$("body").on("click",".done", function(event){
-  // console.log("Checkbox done");
-  event.stopImmediatePropagation();
-  $(this).parent().toggleClass("strikeOut");
-  // console.log("Element is", $(this).closest());
-});
-
-$("body").on("click", ".glyphicon.glyphicon-trash", function(event){
-  event.stopImmediatePropagation();
-  console.log("Deleted list item id", $(this).parent());
-  $.ajax({
-     // console.log("Deleted list item id", $(this).parent().data('id'));
-        url: "/tasks/"+$(this).parent().data('task-id')+"?_method=DELETE",
-        type: "DELETE",
-        success: () => {
-          console.log("success DELETE");
-          console.log("Deleted list item is", $(this).parent());
-            $(this).parent().remove();
-        }
-      });
-})
-
-
-
-
-loadTasks();
-
-
+  loadTasks();
 });
