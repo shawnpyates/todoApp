@@ -10,5 +10,28 @@
   .list-group-item {
     margin: 10px;
     width:302.25px;
+
+      .done {
+        margin-right: 10px;
+        background: #F8F8F8;
+      }
+
+      .glyphicon.glyphicon-trash {
+        float:right;
+        color: #d3d3d3;
+        visibility: hidden;
+      }
+
+    &.strikeOut {
+    text-decoration: line-through;
   }
+
+  }
+  .list-group-item:hover .glyphicon.glyphicon-trash{
+      visibility: visible;
+    }
+
+
+
+
 }

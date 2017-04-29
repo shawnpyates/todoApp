@@ -1,34 +1,22 @@
 $(() => {
-
-$(".list-group-item").on("click", function(event){
-  console.log("Item clicked", $(this));
-  console.log("Output is",$(this)[0].innerText);
-  $("#myModal").modal('show');
-  $(".body-text")[0].innerText = $(this)[0].innerText;
-  console.log("ITEM is", $(".body-text"));
-})
-$( "#list-group1, #list-group2, #list-group3, #list-group4" ).sortable({
-      connectWith: ".sorted"
-    }).disableSelection();
-
-$(".add").on("click", function(event) {
-//  console.log("field", $(".form-control"));
-  const userInput = $(".form-control")[0].value;
-  console.log(userInput);
-  $.ajax({
-        url: "/tasks",
-        method: "POST",
-        data: {"name": userInput},
-        success: function() {
-          console.log("success POST");
-          $(".form-control")[0].value = "";
-          loadTasks();
-        }
-      });
+  //Invoked when the user adds task and add button is clicked
+  $(".add").on("click", function(event) {
+    const userInput = $(".form-control")[0].value;
+    console.log(userInput);
+    $.ajax({
+          url: "/tasks",
+          method: "POST",
+          data: {"name": userInput},
+          success: function() {
+            console.log("success POST");
+            $(".form-control")[0].value = "";
+            loadTasks();
+          }
+    });
   });
-
-function loadTasks(){
-      $.ajax({
+  //Makes a GET request to get the json object of the data and passes the data to renderTask
+  function loadTasks(){
+    $.ajax({
       url: "/tasks",
       method: "GET",
       success: function(data) {
@@ -36,24 +24,20 @@ function loadTasks(){
         renderTask(data);
       }
     });
-}
-// console.log("Input", $userInput);
+  }
 
-function renderTask(input){
-  const $task = input.map(createElement).reverse();
-  console.log("Task element", $task)
-  $(".movies").append($task);
-}
+  //Once it gets the data, passes each task data to the createElement and on recieve the element appends it to the corresponding list group
+  function renderTask(input){
+    const $task = input.map(createElement).reverse();
+    $(".movies").append($task);
+  }
 
-function createElement(task){
-  console.log("Task obj", task);
-  const taskName = task.name;
-  console.log("Task name", taskName);
-  const $taskButton = `<li class="list-group-item"><input type="checkbox">${taskName}</button>`
-  return $taskButton;
-}
+  //Creates a new task list item
+  function createElement(task){
+    const taskName = task.name;
+    const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${taskName}</li>`;
+    return $taskListitem;
+  }
 
-
-
-
+  loadTasks();
 });
