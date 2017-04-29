@@ -79,7 +79,9 @@ function findInApi(searchItem) {
   getSplitMessage(searchItem, apiTypes.zomato, function(splitMessages){
     console.log("ZOMATO SPLIT STRINGS: ", splitMessages[0].toLowerCase(), splitMessages[1].toLowerCase());
     if (splitMessages[0].toLowerCase() === `${searchItem}`.toLowerCase() ||
-        splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase()) {
+        splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase() ||
+        splitMessages[0].toLowerCase() === `${searchItem} menu`.toLowerCase())
+    {
       apiTypes.zomato.found = true;
     } else {
       apiTypes.zomato.found = false;
