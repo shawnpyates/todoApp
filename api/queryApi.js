@@ -92,7 +92,7 @@ function findInApi(searchItem) {
 function setValues(searchItem) {
   return new Promise((resolve, reject) => {
     findInApi(searchItem);
-    setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 1000);
+    setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 1500);
   });
 }
 

@@ -39,16 +39,18 @@ module.exports = (knex) => {
     console.log("GET is hit");
     knex
     .select("*")
-      .from("dummydata")
+      .from("tasks")
       .then((results) => {
         console.log("Result", results);
         res.json(results);
     });
   });
 
+
+
   router.post("/", (req, res) => {
     function insertData(result) {
-      knex('dummydata').insert({ name: req.body.name, categories_id: result })
+      knex('tasks').insert({ task_name: req.body.name, categories_id: result })
       .then(() =>  { res.status(201).send(); })
      }
     console.log("post is hit");
@@ -63,7 +65,7 @@ module.exports = (knex) => {
 
   router.delete("/:id", (req, res) => {
     console.log("ID is ", req.params.id);
-    knex('dummydata').where('id',req.params.id).del()
+    knex('tasks').where('id',req.params.id).del()
       .then(() => {res.status(200).json({ok: true}); });
   });
 

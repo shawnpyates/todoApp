@@ -35,7 +35,7 @@ $(() => {
   //Creates a new task list item
   function createElement(task){
     const taskName = task.name;
-    const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${taskName}</li>`;
+    const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${task.task_name}</li>`;
     return $taskListitem;
   }
 
