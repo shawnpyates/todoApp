@@ -25,7 +25,7 @@ const getMessage = (searchType, item, cb) => {
       });
       response.on('end', () => {
         const page  = JSON.parse(body);
-        if (page.items) {
+        if (page.hasOwnProperty("items")) {
         const title = page.items[0].title;
         console.log("HERE'S THE TITLE:  ", title);
         cb(title);
@@ -46,20 +46,17 @@ function getSplitMessage(searchItem, type, cb) {
   }
   getMessage(type.id, searchItem, function(searchTitle) {
     type.message = searchTitle;
-    // console.log("-----SEARCH TITLE INSIDE SPLITM-----", searchTitle);
     let splitSearchArray = []
     for (let i = 0; i < type.splitters.length; i++) {
       splitSearchTitle = searchTitle.split(type.splitters[i]);
       splitSearchArray.push(splitSearchTitle[0]);
     }
-    console.log(`---SPLITSEARCH ARRAY INSIDE SPLITM---- for ${type}...`, splitSearchArray);
     cb(splitSearchArray);
   });
 }
 
 // find if search item has matches in API for each search type
 function findInApi(searchItem) {
-  console.log("SEARCH ITEM FROM FINDINAPI: ", searchItem);
   getSplitMessage(searchItem, apiTypes.imdb, function(splitMessages){
     console.log("IMDB SPLIT STRING: ", splitMessages[0].toLowerCase());
     if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
@@ -69,7 +66,7 @@ function findInApi(searchItem) {
     }
   });
   getSplitMessage(searchItem, apiTypes.gBooks, function(splitMessages){
-    console.log("GBOOKS SPLIT STRING: ", splitMessages[0].toLowerCase())
+    console.log("GBOOKS SPLIT STRING: ", splitMessages[0].toLowerCase());
     if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
       apiTypes.gBooks.found = true;
     } else {
@@ -77,7 +74,8 @@ function findInApi(searchItem) {
     }
   });
   getSplitMessage(searchItem, apiTypes.zomato, function(splitMessages){
-    console.log("ZOMATO SPLIT STRINGS: ", splitMessages[0].toLowerCase(), splitMessages[1].toLowerCase());
+    console.log("ZOMATO SPLIT STRING 0: ", splitMessages[0].toLowerCase());
+    console.log("ZOMATO SPLIT STRING 1: ", splitMessages[1].toLowerCase());
     if (splitMessages[0].toLowerCase() === `${searchItem}`.toLowerCase() ||
         splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase() ||
         splitMessages[0].toLowerCase() === `${searchItem} menu`.toLowerCase())
@@ -88,7 +86,8 @@ function findInApi(searchItem) {
     }
   });
   getSplitMessage(searchItem, apiTypes.walmart, function(splitMessages){
-    console.log ("WALMART SPLIT STRING: ", splitMessages[0].toLowerCase());
+    console.log("WALMART MESSAGE: ", splitMessages[0].toLowerCase());
+    console.log("WALMART SPLIT STRING: ", splitMessages[0].toLowerCase());
     if (apiTypes.walmart.message.toLowerCase().includes(searchItem.toLowerCase()) &&
         splitMessages[0] !== "Walmart") {
       apiTypes.walmart.found = true;
@@ -103,43 +102,14 @@ function findInApi(searchItem) {
 function setValues(searchItem) {
   return new Promise((resolve, reject) => {
     findInApi(searchItem);
-    setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 2000);
+    setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 3000);
   });
 }
-
-// assign a category to each take so we can result how to display the result to the user
-// function finish(results) {
-//   let imdb = results[0];
-//   let gBooks = results[1];
-//   let zomato = results[2];
-//   let walmart = results[3];
-//   if (imdb && !gBooks && !zomato) {
-//     console.log(1);
-//     return 1;
-//   } else if (!imdb && gBooks && !zomato) {
-//     console.log(2);
-//     return 2;
-//   } else if (!imdb && !gBooks && zomato) {
-//     console.log(3);
-//     return 3;
-//   } else if (!imdb && !gBooks && !zomato) {
-//     if (walmart) {
-//       console.log(4);
-//       return 4;
-//     }
-//   } else if (imdb && gBooks && !zomato) {
-//     console.log(5);
-//     return 5;
-//   } else {
-//     console.log(6);
-//     return 6;
-//   }
-// }
 
 
 module.exports = setValues;
 
-// setValues("Jaws").then(finish);
+
 
 
 
