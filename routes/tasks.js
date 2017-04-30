@@ -53,14 +53,18 @@ module.exports = (knex) => {
       knex('tasks').insert({ task_name: req.body.name, categories_id: result })
       .then(() =>  { res.status(201).send(); })
      }
-    console.log("post is hit");
-    console.log("Input recieved is", req.body.name);
+    // console.log("post is hit");
+    // console.log("Input recieved is", req.body.name);
     searchCategory(req.body.name).then(finish).then(insertData);
 });
 
 
-  router.put("/", (req, res) => {
-    knex
+  router.put("/:id", (req, res) => {
+    //knex
+    console.log("Put is hit");
+    console.log("Inputs recieved", req.body.id, req.body.cat_id);
+    knex('tasks').where('id',req.body.id).update('categories_id', req.body.cat_id)
+      .then(() => {res.status(200).json({ok: true}); });
   });
 
   router.delete("/:id", (req, res) => {

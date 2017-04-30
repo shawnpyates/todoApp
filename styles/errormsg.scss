@@ -1,6 +1,14 @@
-  .message {
-    text-align: center;
-    margin-bottom: 90px;
-    color: #f79442;
-    visibility: hidden;
+  #top {
+    div {
+      .message{
+        margin-bottom: 90px;
+        text-align: center;
+        span {
+          text-align: center;
+          margin-bottom: 90px;
+          color: #f79442;
+          visibility: hidden;
+        }
+    }
+  }
   }

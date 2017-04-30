@@ -88,7 +88,7 @@
   </div>
 </div>
 
-  <div class="row">
+  <div class="row" id="top">
   <div class="col-lg-3"></div>
   <div class="col-lg-6">
     <div class="input-group">
@@ -97,7 +97,7 @@
         <button class="btn btn-default add" type="button">Add to list</button>
       </span>
     </div><!-- /input-group -->
-    <p class="message">Error message goes here</p>
+    <p class="message"><span>Error message goes here</span></p>
   </div><!-- /.col-lg-6 -->
   <div class="col-lg-3"></div>
 </div><!-- /.row -->
@@ -105,22 +105,22 @@
 <div class="row listContainer">
   <div class="col-lg-3">
   <div class="list-heading">Movies</div>
-    <ul id="list-group1" class="sorted movies">
+    <ul id="list-group1" class="sorted movies" data-id="1">
     </ul>
   </div>
   <div class="col-lg-3">
   <div class="list-heading">Products</div>
-    <ul id="list-group2" class="sorted products">
+    <ul id="list-group2" class="sorted products" data-id="4">
     </ul>
   </div>
     <div class="col-lg-3">
       <div class="list-heading">Books</div>
-        <ul id="list-group3" class="sorted books">
-        </ul>
+      <ul id="list-group3" class="sorted books" data-id="2">
+      </ul>
   </div>
     <div class="col-lg-3">
     <div class="list-heading">Restaurants</div>
-        <ul id="list-group4" class="sorted restaurants">
+        <ul id="list-group4" class="sorted restaurants" data-id="3">
       </ul>
   </div>
 </div>
