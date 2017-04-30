@@ -46,12 +46,30 @@ $(() => {
       } else if (cat_id === 4) {
           $(".products").append($task);
       }else if (cat_id === 5) {
-          // $(".errormessage").text() = "";
-          // $(".errormessage").show();
+          console.log("message element", $(".message"));
+          console.log("span inside message", $(".message > span"))
+          $(".message > span").text("Found Results in both Books and Movies, please select your preferred category");
+          $(".message > span").css('visibility', 'visible');
+          $(".listContainer").on("click", function(event){
+            //event.stopPropagation();
+            console.log("item clicked", $(event.target));
+            $.ajax({
+              url: "/tasks/"+$($task).data('task-id')+"?_method=PUT",
+              method: "PUT",
+              data : {id: $($task).data("task-id"), cat_id: $(event.target).siblings().data('id')},
+              success: () => {
+                console.log("sibling", $(event.target).siblings());
+                $(".message > span").css('visibility', 'hidden');
+                  $(event.target).siblings().append($task);
+              }
+            });
+
+          })
           //$(".books").append($task);
       } else if (cat_id === 6) {
-        // $(".errormessage").text() = "";
-        // $(".errormessage").show();
+
+        $(".message > span").text("Could not categorize, please select your preferred category");
+        $(".message >span").css('visibility', 'visible');
           //$(".books").append($task);
       } else {
 
