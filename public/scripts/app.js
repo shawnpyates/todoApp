@@ -2,17 +2,20 @@ $(() => {
   //Invoked when the user adds task and add button is clicked
   $(".add").on("click", function(event) {
     const userInput = $(".form-control")[0].value;
-    console.log(userInput);
-    $.ajax({
+    if(!userInput.length){
+       $(".message > span").text("Input cannot be blank");
+     } else {
+        $.ajax({
           url: "/tasks",
           method: "POST",
           data: {"name": userInput},
           success: function() {
-            console.log("success POST");
+            $(".message > span").css('visibility', 'hidden');
             $(".form-control")[0].value = "";
             loadTasks();
           }
-    });
+        });
+      }
   });
   //Makes a GET request to get the json object of the data and passes the data to renderTask
   function loadTasks(){
@@ -33,9 +36,6 @@ $(() => {
   function renderTask(tasks){
     tasks.forEach((task) => {
       const $task = createElement(task);
-        console.log("TAsk is ", $($task));
-        console.log("cat id", $($task).data("category-id"));
-      //const $category = assignCategory($task);
       const cat_id = $($task).data("category-id");
       if (cat_id === 1) {
           $(".movies").append($task);
@@ -46,40 +46,22 @@ $(() => {
       } else if (cat_id === 4) {
           $(".products").append($task);
       }else if (cat_id === 5) {
-          console.log("message element", $(".message"));
-          console.log("span inside message", $(".message > span"))
           $(".message > span").text("Found Results in both Books and Movies, please select your preferred category");
-          $(".message > span").css('visibility', 'visible');
-          $(".listContainer").on("click", function(event){
-            //event.stopPropagation();
-            console.log("item clicked", $(event.target));
+        appendtoCategory($task);
+      } else if (cat_id === 6) {
+          $(".message > span").text("Could not categorize, please select your preferred category");
+          appendtoCategory($task);
+      } else {
+          $(".message > span").text("Try again later, connection problem seems to apear");
             $.ajax({
-              url: "/tasks/"+$($task).data('task-id')+"?_method=PUT",
-              method: "PUT",
-              data : {id: $($task).data("task-id"), cat_id: $(event.target).siblings().data('id')},
+              url: "/tasks/"+$($task).data('task-id')+"?_method=DELETE",
+              type: "DELETE",
               success: () => {
-                console.log("sibling", $(event.target).siblings());
-                $(".message > span").css('visibility', 'hidden');
-                  $(event.target).siblings().append($task);
               }
             });
-
-          })
-          //$(".books").append($task);
-      } else if (cat_id === 6) {
-
-        $(".message > span").text("Could not categorize, please select your preferred category");
-        $(".message >span").css('visibility', 'visible');
-          //$(".books").append($task);
-      } else {
-
       }
 
     });
-    // const $task = tasks.map(createElement).reverse();
-
-
-    //$(".movies").append($task);
   }
 
   //Creates a new task list item
@@ -89,11 +71,23 @@ $(() => {
     return $taskListitem;
   }
 
-  // function assignCategory(task){
-  //    if(){
+  function appendtoCategory($taskElement){
+    $(".message >span").css('visibility', 'visible');
+    const $task = $taskElement;
+    $(".listContainer").on("click", function(event){
+      $.ajax({
+        url: "/tasks/"+$($task).data('task-id')+"?_method=PUT",
+        method: "PUT",
+        data : {id: $($task).data("task-id"), cat_id: $(event.target).siblings().data('id')},
+        success: () => {
+          console.log("sibling", $(event.target).siblings());
+            $(".message > span").css('visibility', 'hidden');
+            $(event.target).siblings().append($task);
+          }
+      });
 
-  //    }
-  // }
+          })
+  }
 
   loadTasks();
 });
