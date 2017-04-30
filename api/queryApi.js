@@ -26,9 +26,11 @@ const getMessage = (searchType, item, cb) => {
       response.on('end', () => {
         const page  = JSON.parse(body);
         if (page.hasOwnProperty("items")) {
-        const title = page.items[0].title;
-        console.log("HERE'S THE TITLE:  ", title);
-        cb(title);
+          const title = page.items[0].title;
+          console.log("HERE'S THE TITLE:  ", title);
+          cb(title);
+        } else {
+          cb("");
         }
       });
     } else {

@@ -46,20 +46,7 @@ function findOne(input, target, categories_id) {
       }
    }
  }
-//  input.forEach(function(inputElement) {
-//     target.forEach(function(targetElement) {
-//      if (inputElement.toLowerCase() === targetElement.toLowerCase()) {
-//         catID = 1;
-//      }
-//    });
-// });
-//  return catID;
 }
-
-// findOne(myArgs, toWatch, 1);
-// findOne(myArgs, toRead, 2);
-// findOne(myArgs, toEat, 3);
-// findOne(myArgs, toBuy, 4);
 
 
 
@@ -100,7 +87,7 @@ module.exports = (knex) => {
     } else {
     function insertData(result) {
       if (!result) {
-        result = 6;
+        result = null;
       }
       knex('tasks').insert({ task_name: req.body.name, categories_id: result })
       .then(() =>  { res.status(201).send(); })
