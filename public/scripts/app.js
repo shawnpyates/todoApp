@@ -2,16 +2,11 @@ $(() => {
   //Invoked when the user adds task and add button is clicked
   $(".add").on("click", function(event) {
     const userInput = $(".form-control")[0].value;
-    console.log("length",userInput.length);
     if(!userInput.length){
-      console.log("input is blank");
-      console.log("span", $(".message > span"));
       $(".message > span").css('visibility', 'visible');
        $(".message > span").text("Input cannot be blank");
      }
-     else if(userInput.length > 50){
-      console.log("input is long");
-      console.log("span", $(".message > span"));
+      else if(userInput.length > 50){
       $(".message > span").css('visibility', 'visible');
        $(".message > span").text("Input has exceeded the max. word limit");
      }
@@ -50,38 +45,32 @@ $(() => {
   function renderTask(tasks){
     tasks.forEach((task) => {
       const $task = createElement(task);
-      console.log("task", $task);
       const cat_id = $($task).data("category-id");
       const link = $($task).data("link");
-      console.log("link", link);
       const desc = $($task).data("description");
-      console.log("desc",desc);
-      console.log("cat-id",cat_id);
-      addContentToTask($task);
       if (cat_id === 1) {
-          $(".movies").prepend($task);
+        $(".movies").prepend($task);
       } else if (cat_id === 2) {
-          $(".books").prepend($task);
+        $(".books").prepend($task);
       } else if (cat_id === 3) {
-          $(".restaurants").prepend($task);
+        $(".restaurants").prepend($task);
       } else if (cat_id === 4) {
-          $(".products").prepend($task);
-      }else if (cat_id === 5) {
-          $(".message > span").text("Found results in both books and movies. Please select your preferred category.");
+        $(".products").prepend($task);
+      } else if (cat_id === 5) {
+        $(".message > span").text("Found Results in both Books and Movies, please select your preferred category");
         appendtoCategory($task);
       } else if (cat_id === 6) {
-          $(".message > span").text("Could not categorize. Please select your preferred category");
-          appendtoCategory($task);
+        $(".message > span").text("Could not categorize, please select your preferred category");
+        appendtoCategory($task);
       } else {
-          $(".message > span").text("There seems to be a problem with the connection. Try again soon.");
-            $.ajax({
-              url: "/tasks/"+$($task).data('task-id')+"?_method=DELETE",
-              type: "DELETE",
-              success: () => {
-              }
-            });
+        $(".message > span").text("Try again later, connection problem seems to apear");
+          $.ajax({
+            url: "/tasks/"+$($task).data('task-id')+"?_method=DELETE",
+            type: "DELETE",
+            success: () => {
+            }
+          });
       }
-
     });
   }
 
@@ -92,36 +81,22 @@ $(() => {
     return $taskListitem;
   }
 
-  function addContentToTask(task){
-
-  }
-
+//When clicked on the category heading, appends the task element to the corresponding category
   function appendtoCategory($taskElement){
     $(".message >span").css('visibility', 'visible');
     const $task = $taskElement;
-    let isCatClicked = false;
-    console.log("appedToCategory");
-    var listContainerClickHanlder = $(".listContainer").on("click", function(event){
-      console.log('appedToCategory.onClick()');
+    $(".listContainer").on("click", function(event){
       $.ajax({
         url: "/tasks/"+$($task).data('task-id')+"?_method=PUT",
         method: "PUT",
         data : {id: $($task).data("task-id"), cat_id: $(event.target).siblings().data('id')},
         success: () => {
-          console.log("sibling", $(event.target).siblings());
-            $(".message > span").css('visibility', 'hidden');
-            $(event.target).siblings().prepend($task);
-          }
+          $(".message > span").css('visibility', 'hidden');
+          $(event.target).siblings().prepend($task);
+        }
       });
       $(".listContainer").unbind();
-      isCatClicked = true;
     });
-
-    // listContainerClickHanlder = null;
-
-    if(isCatClicked){
-
-    }
   }
 
   loadTasks();
