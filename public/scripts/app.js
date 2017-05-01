@@ -50,7 +50,9 @@ $(() => {
   function renderTask(tasks){
     tasks.forEach((task) => {
       const $task = createElement(task);
+      console.log("task", $task);
       const cat_id = $($task).data("category-id");
+      console.log("cat-id",cat_id);
       if (cat_id === 1) {
           $(".movies").append($task);
       } else if (cat_id === 2) {
@@ -88,6 +90,7 @@ $(() => {
   function appendtoCategory($taskElement){
     $(".message >span").css('visibility', 'visible');
     const $task = $taskElement;
+    let isCatClicked = false;
     $(".listContainer").on("click", function(event){
       $.ajax({
         url: "/tasks/"+$($task).data('task-id')+"?_method=PUT",
@@ -99,8 +102,11 @@ $(() => {
             $(event.target).siblings().append($task);
           }
       });
+      isCatClicked = true;
+    })
+    if(isCatClicked){
 
-          })
+    }
   }
 
   loadTasks();

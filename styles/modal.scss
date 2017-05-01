@@ -1,19 +1,16 @@
-#myModal {
-
-background-color: #b7e4e8;
-  .btn-primary {
-    background-color: #53b5bc;
-  }
-}
 
 #myModal {
-  background-color: #b7e4e8;
+      background-color: #394d64;
+
+  .modal-content {
+        background-color: #5f7080;
 
   .modal-header {
-
+    color: #e8e8e8;
   }
   .modal-body {
     .body-text {
+        color: #e8e8e8;
       .glyphicon.glyphicon-pencil {
         float: right;
         opacity: 0.6;
@@ -24,6 +21,8 @@ background-color: #b7e4e8;
 }
   }
   .btn-primary {
-    background-color: #53b5bc;
+    background-color: #e77e1d;
+    color: #e8e8e8;
   }
+}
 }
