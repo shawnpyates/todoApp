@@ -10,9 +10,14 @@ function generateQueryUrl(searchID, item) {
   return `https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`;
 }
 
+function findValue(file, outerKey, innerKey) {
+  return file[outerKey][0][innerKey];
+}
+
 
 // connect to API and parse JSON so that it can be queried
-const getMessage = (searchType, item, cb) => {
+const getMessage = (searchType, item, key, cb) => {
+  //in this case, key must be "title"
   if (searchType === apiTypes.zomato.id) {
     item += " vancouver";
   }
@@ -20,15 +25,17 @@ const getMessage = (searchType, item, cb) => {
   return https.get(queryUrl, response => {
     if (response.statusCode === 200){
       let body = "";
+      console.log(`----CONNECTED HERE WITH ${searchType} AND ${key}----`);
       response.on('data', data => {
         body += data.toString();
       });
       response.on('end', () => {
         const page  = JSON.parse(body);
         if (page.hasOwnProperty("items")) {
-          const title = page.items[0].title;
-          console.log("HERE'S THE TITLE:  ", title);
-          cb(title);
+          console.log("HERE'S THE FOCUS KEY: ", key);
+          const value = findValue(page, "items", key);
+          console.log("---------HERE'S THE VALUE!!!!-----", value);
+          cb(value);
         } else {
           cb("");
         }
@@ -46,7 +53,7 @@ function getSplitMessage(searchItem, type, cb) {
     console.error("No input.");
     return;
   }
-  getMessage(type.id, searchItem, function(searchTitle) {
+  getMessage(type.id, searchItem, "title", function(searchTitle) {
     type.message = searchTitle;
     let splitSearchArray = []
     for (let i = 0; i < type.splitters.length; i++) {
@@ -59,58 +66,73 @@ function getSplitMessage(searchItem, type, cb) {
 
 // find if search item has matches in API for each search type
 function findInApi(searchItem) {
-  getSplitMessage(searchItem, apiTypes.imdb, function(splitMessages){
-    console.log("IMDB SPLIT STRING: ", splitMessages[0].toLowerCase());
-    if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
-      apiTypes.imdb.found = true;
-    } else {
-      apiTypes.imdb.found = false;
-    }
-  });
-  getSplitMessage(searchItem, apiTypes.gBooks, function(splitMessages){
-    console.log("GBOOKS SPLIT STRING: ", splitMessages[0].toLowerCase());
-    if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
-      apiTypes.gBooks.found = true;
-    } else {
-      apiTypes.gBooks.found = false;
-    }
-  });
-  getSplitMessage(searchItem, apiTypes.zomato, function(splitMessages){
-    console.log("ZOMATO SPLIT STRING 0: ", splitMessages[0].toLowerCase());
-    console.log("ZOMATO SPLIT STRING 1: ", splitMessages[1].toLowerCase());
-    if (splitMessages[0].toLowerCase() === `${searchItem}`.toLowerCase() ||
-        splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase() ||
-        splitMessages[0].toLowerCase() === `${searchItem} menu`.toLowerCase())
-    {
-      apiTypes.zomato.found = true;
-    } else {
-      apiTypes.zomato.found = false;
-    }
-  });
-  getSplitMessage(searchItem, apiTypes.walmart, function(splitMessages){
-    console.log("WALMART MESSAGE: ", splitMessages[0].toLowerCase());
-    console.log("WALMART SPLIT STRING: ", splitMessages[0].toLowerCase());
-    if (apiTypes.walmart.message.toLowerCase().includes(searchItem.toLowerCase()) &&
-        splitMessages[0] !== "Walmart") {
-      apiTypes.walmart.found = true;
-      console.log("------------TRUE FOR WALMART------------");
-    } else {
-      apiTypes.walmart.found = false;
-    }
+  return new Promise ((resolve, reject) => {
+    let imdbPromise = new Promise ((resolve, reject) => {
+      getSplitMessage(searchItem, apiTypes.imdb, function(splitMessages){
+      console.log("IMDB SPLIT STRING: ", splitMessages[0].toLowerCase());
+      if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+      });
+    });
+    let gBooksPromise = new Promise ((resolve, reject) => {
+      getSplitMessage(searchItem, apiTypes.gBooks, function(splitMessages){
+        console.log("GBOOKS SPLIT STRING: ", splitMessages[0].toLowerCase());
+        if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+    let zomatoPromise = new Promise ((resolve, reject) => {
+      getSplitMessage(searchItem, apiTypes.zomato, function(splitMessages){
+        console.log("ZOMATO SPLIT STRING 0: ", splitMessages[0].toLowerCase());
+        console.log("ZOMATO SPLIT STRING 1: ", splitMessages[1].toLowerCase());
+        if (splitMessages[0].toLowerCase() === `${searchItem}`.toLowerCase() ||
+            splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase() ||
+            splitMessages[0].toLowerCase() === `${searchItem} menu`.toLowerCase())
+        {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+    let walmartPromise = new Promise ((resolve, reject) => {
+      getSplitMessage(searchItem, apiTypes.walmart, function(splitMessages){
+        console.log("WALMART MESSAGE: ", splitMessages[0].toLowerCase());
+        console.log("WALMART SPLIT STRING: ", splitMessages[0].toLowerCase());
+        if (apiTypes.walmart.message.toLowerCase().includes(searchItem.toLowerCase()) &&
+            splitMessages[0] !== "Walmart") {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+    Promise.all([imdbPromise, gBooksPromise, zomatoPromise, walmartPromise]).then(values =>
+      resolve({ booleans: values, item: searchItem }));
   });
 }
 
 // allow time for each search and collect values before displaying result to user
-function setValues(searchItem) {
-  return new Promise((resolve, reject) => {
-    findInApi(searchItem);
-    setTimeout(() => resolve ([apiTypes.imdb.found, apiTypes.gBooks.found, apiTypes.zomato.found, apiTypes.walmart.found]), 3000);
-  });
-}
+// function setBooleans(searchItem) {
+//   return new Promise((resolve, reject) => {
+//     findInApi(searchItem);
+//     setTimeout(() => resolve ({ booleans: [apiTypes.imdb.found, apiTypes.gBooks.found,
+//                                            apiTypes.zomato.found, apiTypes.walmart.found],
+//                                 item: searchItem }), 3000);
+//   });
+// }
 
 
-module.exports = setValues;
-
+module.exports.findInApi = findInApi;
+module.exports.getMessage = getMessage;
+// module.exports.findValue = findValue;
+// module.exports.generateQueryUrl = generateQueryUrl;
 
 
 
