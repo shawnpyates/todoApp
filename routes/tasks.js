@@ -141,7 +141,7 @@ module.exports = (knex) => {
         results.category = null;
       }
       console.log("------TOTAL RESUTS------", results);
-      knex('tasks').insert({ task_name: req.body.name, categories_id: results.category })
+      knex('tasks').insert({ task_name: req.body.name, categories_id: results.category, link: results.link})
       // we also want to insert { link: results.link }
       .then(() =>  { res.status(201).send(); })
      }
