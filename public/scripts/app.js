@@ -52,15 +52,20 @@ $(() => {
       const $task = createElement(task);
       console.log("task", $task);
       const cat_id = $($task).data("category-id");
+      const link = $($task).data("link");
+      console.log("link", link);
+      const desc = $($task).data("description");
+      console.log("desc",desc);
       console.log("cat-id",cat_id);
+      addContentToTask($task);
       if (cat_id === 1) {
-          $(".movies").append($task);
+          $(".movies").prepend($task);
       } else if (cat_id === 2) {
-          $(".books").append($task);
+          $(".books").prepend($task);
       } else if (cat_id === 3) {
-          $(".restaurants").append($task);
+          $(".restaurants").prepend($task);
       } else if (cat_id === 4) {
-          $(".products").append($task);
+          $(".products").prepend($task);
       }else if (cat_id === 5) {
           $(".message > span").text("Found Results in both Books and Movies, please select your preferred category");
         appendtoCategory($task);
@@ -83,15 +88,21 @@ $(() => {
   //Creates a new task list item
   function createElement(task){
     const taskName = task.name;
-    const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}" data-category-id="${task.categories_id}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${task.task_name}</li>`;
+    const $taskListitem = `<li class="list-group-item" data-task-id="${task.id}" data-category-id="${task.categories_id}" data-description="${task.description}" data-link="${task.link}"><input class ="done" type="checkbox"><i class="glyphicon glyphicon-trash"></i>${task.task_name}</li>`;
     return $taskListitem;
+  }
+
+  function addContentToTask(task){
+
   }
 
   function appendtoCategory($taskElement){
     $(".message >span").css('visibility', 'visible');
     const $task = $taskElement;
     let isCatClicked = false;
-    $(".listContainer").on("click", function(event){
+    console.log("appedToCategory");
+    var listContainerClickHanlder = $(".listContainer").on("click", function(event){
+      console.log('appedToCategory.onClick()');
       $.ajax({
         url: "/tasks/"+$($task).data('task-id')+"?_method=PUT",
         method: "PUT",
@@ -99,11 +110,15 @@ $(() => {
         success: () => {
           console.log("sibling", $(event.target).siblings());
             $(".message > span").css('visibility', 'hidden');
-            $(event.target).siblings().append($task);
+            $(event.target).siblings().prepend($task);
           }
       });
+      $(".listContainer").unbind();
       isCatClicked = true;
-    })
+    });
+
+    // listContainerClickHanlder = null;
+
     if(isCatClicked){
 
     }
