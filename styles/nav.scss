@@ -1,24 +1,28 @@
 
-$brand-color: #82D2D8;
-
 body {
   .navbar.navbar-default {
-    border-bottom: 3px solid $brand-color ;
+    border: 15px solid #394d64 ;
+    background-color: #5F7080;
     .container-fluid {
 
 
       .navbar-header {
         font-size: 2em;
-        color: #53b5bc;
+        color: #e8e8e8;
         font-style: bold;
         line-height: 60px;
       }
   button {
       margin-top:13px;
+      background-color: #d3d3d3;
         }
       .navbar-text.navbar-right{
         margin-right: 16px;
-        line-height: 30px
+        line-height: 30px;
+        color: #e8e8e8;
+        .navbar-link {
+          color: #e8e8e8;
+        }
       }
     }
   }

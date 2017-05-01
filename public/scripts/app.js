@@ -2,21 +2,35 @@ $(() => {
   //Invoked when the user adds task and add button is clicked
   $(".add").on("click", function(event) {
     const userInput = $(".form-control")[0].value;
+    console.log("length",userInput.length);
     if(!userInput.length){
+      console.log("input is blank");
+      console.log("span", $(".message > span"));
+      $(".message > span").css('visibility', 'visible');
        $(".message > span").text("Input cannot be blank");
-     } else {
+     }
+     else if(userInput.length > 50){
+      console.log("input is long");
+      console.log("span", $(".message > span"));
+      $(".message > span").css('visibility', 'visible');
+       $(".message > span").text("Input has exceeded the max. word limit");
+     }
+       else {
         $.ajax({
           url: "/tasks",
           method: "POST",
           data: {"name": userInput},
           success: function() {
-            $(".message > span").css('visibility', 'hidden');
             $(".form-control")[0].value = "";
             loadTasks();
           }
         });
       }
   });
+
+  $(".form-control").on("focus",function(e){
+    $(".message > span").css('visibility', 'hidden');
+  })
   //Makes a GET request to get the json object of the data and passes the data to renderTask
   function loadTasks(){
     $.ajax({

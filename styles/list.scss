@@ -1,15 +1,33 @@
 .list-heading {
-  padding: 20px;
-  color: #53b5bc;
-  font-size:1.2em;
-  margin-left: 35px
+  padding: 15px;
+  font-size:1.25em;
+  margin-left: 45px;
+  width: 302.25px;
+  color: #fff;
+}
+
+.watch {
+  background-color: #e77e1d;
+}
+.read {
+  background-color: #f7bb5f
+}
+.eat {
+   background-color: #6dc370;
+}
+.buy {
+  background-color: #68cdef;
 }
 #list-group1, #list-group2, #list-group3, #list-group4 {
   min-height: 40px;
 
   .list-group-item {
-    margin: 10px;
+    font-size: 1.1em;
     width:302.25px;
+    background-color: #5f7080;
+    border: 1px;
+    margin: 5px;
+    color: #e8e8e8;
 
       .done {
         margin-right: 10px;
