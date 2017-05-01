@@ -16,7 +16,7 @@ function findValue(file, outerKey, innerKey) {
 
 
 // connect to API and parse JSON so that it can be queried
-const getMessage = (searchType, item, key, cb) => {
+const getMessage = (searchType, item, key1, key2, cb) => {
   //in this case, key must be "title"
   if (searchType === apiTypes.zomato.id) {
     item += " vancouver";
@@ -25,17 +25,21 @@ const getMessage = (searchType, item, key, cb) => {
   return https.get(queryUrl, response => {
     if (response.statusCode === 200){
       let body = "";
-      console.log(`----CONNECTED HERE WITH ${searchType} AND ${key}----`);
+      console.log(`----CONNECTED HERE WITH ${searchType} AND ${key1}----`);
       response.on('data', data => {
         body += data.toString();
       });
       response.on('end', () => {
         const page  = JSON.parse(body);
         if (page.hasOwnProperty("items")) {
-          console.log("HERE'S THE FOCUS KEY: ", key);
-          const value = findValue(page, "items", key);
-          console.log("---------HERE'S THE VALUE!!!!-----", value);
-          cb(value);
+          console.log("HERE'S THE FOCUS KEY1: ", key1);
+          const value1 = findValue(page, "items", key1);
+          if (key2) {
+            const value2 = findValue(page, "items", key2);
+            cb(value1, value2);
+          } else {
+            cb(value1);
+          }
         } else {
           cb("");
         }
@@ -49,11 +53,7 @@ const getMessage = (searchType, item, key, cb) => {
 // search results will usually be predictably formatted based on the site being searched
 // split the result and compare specified section to the user's input
 function getSplitMessage(searchItem, type, cb) {
-  if (!searchItem) {
-    console.error("No input.");
-    return;
-  }
-  getMessage(type.id, searchItem, "title", function(searchTitle) {
+  getMessage(type.id, searchItem, "title", null, function(searchTitle) {
     type.message = searchTitle;
     let splitSearchArray = []
     for (let i = 0; i < type.splitters.length; i++) {
@@ -118,21 +118,12 @@ function findInApi(searchItem) {
   });
 }
 
-// allow time for each search and collect values before displaying result to user
-// function setBooleans(searchItem) {
-//   return new Promise((resolve, reject) => {
-//     findInApi(searchItem);
-//     setTimeout(() => resolve ({ booleans: [apiTypes.imdb.found, apiTypes.gBooks.found,
-//                                            apiTypes.zomato.found, apiTypes.walmart.found],
-//                                 item: searchItem }), 3000);
-//   });
-// }
+
 
 
 module.exports.findInApi = findInApi;
 module.exports.getMessage = getMessage;
-// module.exports.findValue = findValue;
-// module.exports.generateQueryUrl = generateQueryUrl;
+
 
 
 

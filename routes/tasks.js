@@ -26,16 +26,19 @@ function getCategory(results) {
         // console.log("CATEGORY 4 MATCH");
         // return 4;
         results.category = 4;
+      } else {
+        results.category = 6;
       }
     } else if (imdb && gBooks && !zomato) {
       // console.log("CATEGORY 5 MATCH");;
       // return 5;
       results.category = 5;
-    } else {
-      // console.log("CATEGORY 6 MATCH");
-      // return 6;
-      results.category = 6;
     }
+    // else {
+    //   // console.log("CATEGORY 6 MATCH");
+    //   // return 6;
+    //   results.category = 6;
+    // }
     resolve(results);
   });
 }
@@ -80,8 +83,9 @@ function getLink(results) {
     }
     if (linkID) {
     // results.linkID = linkID;
-      queryApi.getMessage(linkID, results.item, "link", function(link){
+      queryApi.getMessage(linkID, results.item, "link", "snippet", function(link, snippet){
         results.link = link;
+        results.snippet = snippet;
         resolve(results);
       });
     } else {
