@@ -34,11 +34,6 @@ function getCategory(results) {
       // return 5;
       results.category = 5;
     }
-    // else {
-    //   // console.log("CATEGORY 6 MATCH");
-    //   // return 6;
-    //   results.category = 6;
-    // }
     resolve(results);
   });
 }
