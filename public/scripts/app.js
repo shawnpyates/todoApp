@@ -67,13 +67,13 @@ $(() => {
       } else if (cat_id === 4) {
           $(".products").prepend($task);
       }else if (cat_id === 5) {
-          $(".message > span").text("Found Results in both Books and Movies, please select your preferred category");
+          $(".message > span").text("Found results in both books and movies. Please select your preferred category.");
         appendtoCategory($task);
       } else if (cat_id === 6) {
-          $(".message > span").text("Could not categorize, please select your preferred category");
+          $(".message > span").text("Could not categorize. Please select your preferred category");
           appendtoCategory($task);
       } else {
-          $(".message > span").text("Try again later, connection problem seems to apear");
+          $(".message > span").text("There seems to be a problem with the connection. Try again soon.");
             $.ajax({
               url: "/tasks/"+$($task).data('task-id')+"?_method=DELETE",
               type: "DELETE",
