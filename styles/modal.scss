@@ -7,18 +7,44 @@
 
   .modal-header {
     color: #e8e8e8;
+    .modal-title {
+      color: #68cdef;
+    }
   }
   .modal-body {
     .body-text {
         color: #e8e8e8;
-      .glyphicon.glyphicon-pencil {
+
+        h4 {
+/*          color: #e8e8e8;
+          font-style: bold;*/
+           color: #e77e1d;
+        }
+
+        span {
+          font-size: 1.1em;
+          color: #e8e8e8;
+        }
+      /*.glyphicon.glyphicon-pencil {
         float: right;
         opacity: 0.6;
-      }
+      }*/
     }
-  .edit-input {
-    display:none;
-}
+
+    .link {
+       h4 {
+           color: #e77e1d;
+/*         color: #e8e8e8;
+        font-style: bold;*/
+        }
+           span {
+          font-size: 1.1em;
+          color: #e8e8e8;
+        }
+    }
+/*.edit-input {
+display:none;
+}*/
   }
   .btn-primary {
     background-color: #e77e1d;

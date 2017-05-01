@@ -125,9 +125,13 @@ module.exports = (knex) => {
       if (!results.category) {
         results.category = null;
       }
-      knex('tasks').insert({ task_name: req.body.name, categories_id: results.category })
-      // we also want to insert { link: results.link, snippet: results.snippet }
+      console.log("------TOTAL RESUTS------", results);
+    if(req.body.cat_id !== 6){
+      knex('tasks').insert({ task_name: req.body.name, categories_id: results.category, link: results.link, description: results.snippet })
+      // we also want to insert { link: results.link }
+
       .then(() =>  { res.status(201).send(); })
+    }
      }
     queryApi.findInApi(req.body.name).then(getCategory).then(getLink).then(insertData);
     }
@@ -137,8 +141,10 @@ module.exports = (knex) => {
     //knex
     console.log("Put is hit");
     console.log("Inputs recieved", req.body.id, req.body.cat_id);
-    knex('tasks').where('id',req.body.id).update('categories_id', req.body.cat_id)
+
+      knex('tasks').where('id',req.body.id).update('categories_id', req.body.cat_id)
       .then(() => {res.status(200).json({ok: true}); });
+
   });
 
   router.delete("/:id", (req, res) => {
