@@ -8,7 +8,9 @@ $(() => {
     console.log("modal body", $(".modal-title"), $(".body-text > span"));
     $(".modal-title").text($(this).text());
     $(".body-text > span").text($(this).data('description'));
-    $(".link").find("span").text($(this).data('link'));
+    // $(".link").find("span").text($(this).data('link'));
+    $(".link").find("a").attr('href', $(this).data('link'));
+
       //console.log("ITEM is", $(".body-text"));
     });
 
