@@ -2,7 +2,18 @@ $brand-color: #82D2D8;
 .input-group {
   margin: 40px 0px;
 
+  .form-control {
+    background-color: #5f7080;
+    border: 2px;
+    color: #fff;
+  }
+
+  .form-control::placeholder {
+  color: #e8e8e8;
+  }
   .btn.btn-default {
-    background-color: $brand-color;
+    background-color: #e77e1d;
+    border: 1px;
+    color: #e8e8e8;
   }
 }
