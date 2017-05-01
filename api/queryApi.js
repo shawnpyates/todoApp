@@ -49,7 +49,7 @@ function getSplitMessage(searchItem, type, cb) {
     type.message = searchTitle;
     let splitSearchArray = [];
     for (let i = 0; i < type.splitters.length; i++) {
-      splitSearchTitle = searchTitle.split(type.splitters[i]);
+      let splitSearchTitle = searchTitle.split(type.splitters[i]);
       splitSearchArray.push(splitSearchTitle[0]);
     }
     cb(splitSearchArray);
