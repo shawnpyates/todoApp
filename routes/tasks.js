@@ -5,9 +5,9 @@ const express = require('express');
 const router  = express.Router();
 
 //keywords
-const toWatch = ["watch","see"];
-const toRead = ["read"]
-const toEat = ["eat", "go", "food", "grab"]
+const toWatch = ["watch","see", "movie"];
+const toRead = ["read", "book"];
+const toEat = ["eat", "go", "food", "grab"];
 const toBuy = ["buy", "get", "shop","purchase", "shopping"];
 
 
