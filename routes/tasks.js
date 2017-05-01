@@ -1,64 +1,64 @@
 "use strict";
 const queryApi = require("../api/queryApi");
 const apiTypes = require("../api/apiTypes");
+const express = require('express');
+const router  = express.Router();
 
+//keywords
+const toWatch = ["watch","see"];
+const toRead = ["read"]
+const toEat = ["eat", "go", "food", "grab"]
+const toBuy = ["buy", "get", "shop","purchase", "shopping"];
+
+
+// before checking API, check if user input contains any matches to a hard-coded set of key words
+// if there's a match, category is determined, and API is not checked
+function findOne(input, target, categories_id) {
+ let catID = 0;
+ for (var i = input.length - 1; i >= 0; i--) {
+   for (var j = target.length - 1; j >= 0; j--) {
+      if (input[i].toLowerCase() === target[j].toLowerCase()) {
+        return true;
+      }
+    }
+  }
+}
+
+// we will retrieve an array of booleans from the findInApi function
+// based on the combination of of booleans, we will assign a category to the task
+// if a match for a restaurant in Vancouver is found,
+// it will be assigned to the restaurant category, regardless of other results
+// a task will only be categorized as a product if all other checks are false
 function getCategory(results) {
   return new Promise ((resolve, reject) => {
-    console.log("RESULTS FROM getCategory:  ", results);
     let imdb = results.booleans[0];
     let gBooks = results.booleans[1];
     let zomato = results.booleans[2];
     let walmart = results.booleans[3];
     if (imdb && !gBooks && !zomato) {
-      // console.log("CATEGORY 1 MATCH");
-      // return 1;
       results.category = 1;
     } else if (!imdb && gBooks && !zomato) {
-      // console.log("CATEGORY 2 MATCH");
-      // return 2;
       results.category = 2;
     } else if (zomato) {
-      // console.log("CATEGORY 3 MATCH");
-      // return 3;
       results.category = 3;
     } else if (!imdb && !gBooks && !zomato) {
       if (walmart) {
-        // console.log("CATEGORY 4 MATCH");
-        // return 4;
         results.category = 4;
       } else {
         results.category = 6;
       }
     } else if (imdb && gBooks && !zomato) {
-      // console.log("CATEGORY 5 MATCH");;
-      // return 5;
       results.category = 5;
     }
     resolve(results);
   });
 }
 
-
-const toWatch = ["watch","see"];
-const toRead = ["read"]
-const toEat = ["eat", "go", "food", "grab"]
-const toBuy = ["buy", "get", "shop","purchase", "shopping"];
-
-function findOne(input, target, categories_id) {
- let catID = 0;
- console.log("INPUT: ", input, "TARGET: ", target);
- for (var i = input.length - 1; i >= 0; i--) {
-   for (var j = target.length - 1; j >= 0; j--) {
-      if (input[i].toLowerCase() === target[j].toLowerCase()) {
-        return true;
-      }
-   }
- }
-}
-
+// if the task is assigned a category from 1-4,
+// we will make another request to the corresponding filtered search,
+// and get the link and snippet from the JSON
 function getLink(results) {
   return new Promise ((resolve, reject) => {
-    console.log("--------RESULTS FROM IN getLink---------", results);
     let linkID = "";
     switch (results.category) {
       case 1:
@@ -77,7 +77,6 @@ function getLink(results) {
         linkID = "";
     }
     if (linkID) {
-    // results.linkID = linkID;
       queryApi.getMessage(linkID, results.item, "link", "snippet", function(link, snippet){
         results.link = link;
         results.snippet = snippet;
@@ -85,26 +84,16 @@ function getLink(results) {
       });
     } else {
       results.link = null;
+      results.snippet = null;
       resolve(results);
     }
   });
 }
 
-// function getLink(results) {
-//   return new Promise ((resolve, reject) => {
-//     queryApi.getMessage(results.linkID, results.item, "link", function(link) {
-//       results.link = link;
-//     })
-//   })
-// }
 
-    // queryApi.getMessage(linkID, results.item, "link", function(link){
-    //   results.link = link;
-
-const express = require('express');
-const router  = express.Router();
 
 module.exports = (knex) => {
+
   router.get("/", (req, res) => {
     console.log("GET is hit");
     knex
@@ -116,10 +105,7 @@ module.exports = (knex) => {
     });
   });
 
-
-
   router.post("/", (req, res) => {
-      console.log("--------------",findOne(req.body.name.split(" "), toWatch, 1));
     let catID =0;
     if (findOne(req.body.name.split(" "), toWatch, 1)) {
       catID = 1;
@@ -130,7 +116,6 @@ module.exports = (knex) => {
     } else if (findOne(req.body.name.split(" "), toBuy, 4)) {
       catID = 4;
     }
-    console.log("-------------VALUE OF CATID------------", catID);
     if (catID) {
       knex('tasks').insert({ task_name: req.body.name, categories_id: catID })
       .then(() =>  { res.status(201).send(); })
@@ -140,17 +125,13 @@ module.exports = (knex) => {
       if (!results.category) {
         results.category = null;
       }
-      console.log("------TOTAL RESUTS------", results);
       knex('tasks').insert({ task_name: req.body.name, categories_id: results.category })
-      // we also want to insert { link: results.link }
+      // we also want to insert { link: results.link, snippet: results.snippet }
       .then(() =>  { res.status(201).send(); })
      }
-    // console.log("post is hit");
-    // console.log("Input recieved is", req.body.name);
     queryApi.findInApi(req.body.name).then(getCategory).then(getLink).then(insertData);
-  }
-});
-
+    }
+  });
 
   router.put("/:id", (req, res) => {
     //knex

@@ -1,23 +1,17 @@
-// const arg = process.argv.slice(2);
-// const searchItem = arg.join(" ");
 const https = require("https");
 const apiTypes = require("./apiTypes");
-
-
 
 function generateQueryUrl(searchID, item) {
   console.log(`https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`);
   return `https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`;
 }
 
-function findValue(file, outerKey, innerKey) {
-  return file[outerKey][0][innerKey];
+function findValue(text, outerKey, innerKey) {
+  return text[outerKey][0][innerKey];
 }
-
 
 // connect to API and parse JSON so that it can be queried
 const getMessage = (searchType, item, key1, key2, cb) => {
-  //in this case, key must be "title"
   if (searchType === apiTypes.zomato.id) {
     item += " vancouver";
   }
@@ -25,14 +19,12 @@ const getMessage = (searchType, item, key1, key2, cb) => {
   return https.get(queryUrl, response => {
     if (response.statusCode === 200){
       let body = "";
-      console.log(`----CONNECTED HERE WITH ${searchType} AND ${key1}----`);
-      response.on('data', data => {
+      response.on("data", data => {
         body += data.toString();
       });
-      response.on('end', () => {
+      response.on("end", () => {
         const page  = JSON.parse(body);
         if (page.hasOwnProperty("items")) {
-          console.log("HERE'S THE FOCUS KEY1: ", key1);
           const value1 = findValue(page, "items", key1);
           if (key2) {
             const value2 = findValue(page, "items", key2);
@@ -55,7 +47,7 @@ const getMessage = (searchType, item, key1, key2, cb) => {
 function getSplitMessage(searchItem, type, cb) {
   getMessage(type.id, searchItem, "title", null, function(searchTitle) {
     type.message = searchTitle;
-    let splitSearchArray = []
+    let splitSearchArray = [];
     for (let i = 0; i < type.splitters.length; i++) {
       splitSearchTitle = searchTitle.split(type.splitters[i]);
       splitSearchArray.push(splitSearchTitle[0]);
@@ -69,7 +61,6 @@ function findInApi(searchItem) {
   return new Promise ((resolve, reject) => {
     let imdbPromise = new Promise ((resolve, reject) => {
       getSplitMessage(searchItem, apiTypes.imdb, function(splitMessages){
-      console.log("IMDB SPLIT STRING: ", splitMessages[0].toLowerCase());
       if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
         resolve(true);
       } else {
@@ -79,8 +70,8 @@ function findInApi(searchItem) {
     });
     let gBooksPromise = new Promise ((resolve, reject) => {
       getSplitMessage(searchItem, apiTypes.gBooks, function(splitMessages){
-        console.log("GBOOKS SPLIT STRING: ", splitMessages[0].toLowerCase());
-        if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase()) {
+        if (splitMessages[0].toLowerCase() === `${searchItem} `.toLowerCase() ||
+            splitMessages[0].toLowerCase().split(":")[0] === `${searchItem}`.toLowerCase()) {
           resolve(true);
         } else {
           resolve(false);
@@ -89,8 +80,6 @@ function findInApi(searchItem) {
     });
     let zomatoPromise = new Promise ((resolve, reject) => {
       getSplitMessage(searchItem, apiTypes.zomato, function(splitMessages){
-        console.log("ZOMATO SPLIT STRING 0: ", splitMessages[0].toLowerCase());
-        console.log("ZOMATO SPLIT STRING 1: ", splitMessages[1].toLowerCase());
         if (splitMessages[0].toLowerCase() === `${searchItem}`.toLowerCase() ||
             splitMessages[1].toLowerCase() === `${searchItem} `.toLowerCase() ||
             splitMessages[0].toLowerCase() === `${searchItem} menu`.toLowerCase())
@@ -103,8 +92,6 @@ function findInApi(searchItem) {
     });
     let walmartPromise = new Promise ((resolve, reject) => {
       getSplitMessage(searchItem, apiTypes.walmart, function(splitMessages){
-        console.log("WALMART MESSAGE: ", splitMessages[0].toLowerCase());
-        console.log("WALMART SPLIT STRING: ", splitMessages[0].toLowerCase());
         if (apiTypes.walmart.message.toLowerCase().includes(searchItem.toLowerCase()) &&
             splitMessages[0] !== "Walmart") {
           resolve(true);
@@ -117,9 +104,6 @@ function findInApi(searchItem) {
       resolve({ booleans: values, item: searchItem }));
   });
 }
-
-
-
 
 module.exports.findInApi = findInApi;
 module.exports.getMessage = getMessage;
