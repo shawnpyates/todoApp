@@ -1,5 +1,5 @@
 {
-  "name": "node-skeleton",
+  "name": "todo-app",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -9,7 +9,7 @@
     "local": "./node_modules/.bin/nodemon --ignore public/",
     "knex": "./node_modules/.bin/knex"
   },
-  "author": "Lighthouse Labs",
+  "author": "Prachi Singh, Ahmen Al-Hashimi, Shawn Yates",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.2",

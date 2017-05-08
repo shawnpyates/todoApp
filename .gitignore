@@ -5,3 +5,4 @@ public/styles
 *.sqlite3
 .DS_Store
 public/.DS_Store
+api/apiTypes.js
