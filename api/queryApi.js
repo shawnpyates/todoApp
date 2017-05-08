@@ -2,7 +2,6 @@ const https = require("https");
 const apiTypes = require("./apiTypes");
 
 function generateQueryUrl(searchID, item) {
-  console.log(`https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`);
   return `https://www.googleapis.com/customsearch/v1?key=${apiTypes.apiKey}&cx=${searchID}&q=${item}`;
 }
 

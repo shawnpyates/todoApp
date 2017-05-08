@@ -24,10 +24,10 @@ function findOne(input, target, categories_id) {
   }
 }
 
-// we will retrieve an array of booleans from the findInApi function
+// we will retrieve an array of booleans from the findInApi function -
 // based on the combination of of booleans, we will assign a category to the task
 // if a match for a restaurant in Vancouver is found,
-// it will be assigned to the restaurant category, regardless of other results
+// it will be assigned to the restaurant category, regardless of other results -
 // a task will only be categorized as a product if all other checks are false
 function getCategory(results) {
   return new Promise ((resolve, reject) => {
@@ -121,36 +121,30 @@ module.exports = (knex) => {
       .then(() =>  { res.status(201).send(); })
       return;
     } else {
-    function insertData(results) {
-      if (!results.category) {
-        results.category = null;
-      }
-      console.log("------TOTAL RESUTS------", results);
-    if(req.body.cat_id !== 6){
-      knex('tasks').insert({ task_name: req.body.name, categories_id: results.category, link: results.link, description: results.snippet })
-      // we also want to insert { link: results.link }
-
-      .then(() =>  { res.status(201).send(); })
-    }
-     }
-    queryApi.findInApi(req.body.name).then(getCategory).then(getLink).then(insertData);
+      function insertData(results) {
+        if (!results.category) {
+          results.category = null;
+        }
+        if(req.body.cat_id !== 6){
+          knex('tasks').insert({ task_name: req.body.name, 
+                                 categories_id: results.category, 
+                                 link: results.link, 
+                                 description: results.snippet })
+                                 .then(() =>  { res.status(201).send(); })
+        }
+      }  
+      queryApi.findInApi(req.body.name).then(getCategory).then(getLink).then(insertData);
     }
   });
 
   router.put("/:id", (req, res) => {
-    //knex
-    console.log("Put is hit");
-    console.log("Inputs recieved", req.body.id, req.body.cat_id);
-
-      knex('tasks').where('id',req.body.id).update('categories_id', req.body.cat_id)
-      .then(() => {res.status(200).json({ok: true}); });
-
+    knex('tasks').where('id',req.body.id).update('categories_id', req.body.cat_id)
+    .then(() => {res.status(200).json({ok: true}); });
   });
 
   router.delete("/:id", (req, res) => {
-    console.log("ID is ", req.params.id);
     knex('tasks').where('id',req.params.id).del()
-      .then(() => {res.status(200).json({ok: true}); });
+    .then(() => {res.status(200).json({ok: true}); });
   });
 
   return router;
